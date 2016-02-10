@@ -1,0 +1,18 @@
+PROCEDURE "tinyworld.tinydb::noCountriesInContinent" ( IN continent NVARCHAR(10), 
+OUT no_countries integer) 
+LANGUAGE SQLSCRIPT 
+SQL SECURITY INVOKER 
+READS SQL DATA AS 
+BEGIN 
+declare noc integer; 
+select count(*) into noc 
+from "tinyworld.tinydb::tinyf.world" 
+where "continent" = continent; 
+if :noc = 0 then 
+no_countries := -1; 
+else 
+select count(*) into no_countries 
+from "tinyworld.tinydb::tinyf.country" 
+where "partof.continent" = continent; 
+end if; 
+END 
